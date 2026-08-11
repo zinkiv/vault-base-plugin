@@ -1,0 +1,207 @@
+import type en from './en';
+
+const translation: typeof en = {
+	deleteConfirm: {
+		deleteAndReupload: '删除选中的，重新上传未选中的',
+		filePath: '文件路径',
+		instruction:
+			'⚠️ 在自动同步过程中检测到以下本地文件将被删除（因远程已删除）。\n\n勾选要删除的文件，未勾选的文件将重新上传到远程：',
+		select: '选择',
+		skipForNow: '暂时忽略',
+		title: '确认删除本地文件',
+		warningNotice: '检测到本地文件将被删除，请确认',
+	},
+	dirSelector: {
+		cancel: '取消',
+		confirm: '确认',
+		currentPath: '当前路径：{{path}}',
+		goBack: '返回',
+		newFolder: '新建文件夹',
+	},
+	errors: {
+		filenameUnsupportedChars: '文件 {{path}} 包含不支持的字符：{{chars}}',
+	},
+	settings: {
+		account: {
+			desc: '输入你的 WebDAV 账号',
+			name: '账号',
+			placeholder: '输入你的账号',
+		},
+		checkConnection: {
+			desc: '点击检查 WebDAV 连接',
+			failure: 'WebDAV 连接失败',
+			failureButton: '连接失败 ×',
+			failureWithReason: 'WebDAV 连接失败：{{reason}}',
+			name: '检查连接',
+			success: 'WebDAV 连接成功',
+			successButton: '连接成功 ✓',
+		},
+		clearRecords: {
+			button: '清除同步记录',
+			cleared: '同步记录已清除',
+			desc: 'WebDAV 同步记录用于协调本地与远程文件之间的同步操作。警告：此操作极可能导致数据丢失。',
+			name: '清除记录',
+		},
+		confirmBeforeDeleteInAutoSync: {
+			desc: '自动同步过程中检测到本地文件将被删除时，弹出确认对话框让你选择删除或重新上传',
+			name: '自动同步时删除文件前确认',
+		},
+		conflictStrategy: {
+			desc: '选择解决文件冲突的方式。\n注意：建议在使用自动合并功能前，先手动备份重要文件，以防数据丢失。',
+			diffMatchPatch: '智能合并',
+			keepLocal: '保留本地版本',
+			keepRemote: '保留远程版本',
+			latestTimestamp: '使用最新版本',
+			name: '冲突解决策略',
+			skip: '跳过冲突',
+		},
+		credential: {
+			desc: '输入你的 WebDAV 凭证',
+			name: '凭证',
+			placeholder: '输入你的凭证',
+		},
+		encryption: {
+			desc: '在上传前加密文件，并在下载时解密文件。密码将存储在 Obsidian 的密钥链中。',
+			name: '加密',
+			reminderModal: {
+				acknowledge: '我知道了',
+				messageDisabled:
+					'⚠️ 在禁用加密之前，请谨慎考虑以下几点：\n\n1. 所有后续上传将以明文形式进行，不再加密。\n2. 请确保所有设备均已禁用加密。\n3. 如果此仓库此前是加密上传的，请完全删除远程目录（包括根文件夹），然后重新上传整个仓库。',
+				messageEnabled:
+					'⚠️ 在启用加密之前，请务必注意以下几点：\n\n1. 此后所有上传的文件都将被加密。\n\n2. 如果此仓库此前曾在未加密的情况下上传过，请彻底删除远程目录（包括根文件夹），然后重新上传整个仓库。\n\n3. 请确保你所有设备上的以下四项内容完全一致：\n    • 加密密码\n    • 服务器 URL\n    • 账户名称\n    • 远程目录\n\n4. 加密算法将解密密钥与文件位置及服务器身份绑定，这提供了更高的安全性和数据完整性。但这也意味着，如果你使用了不同的服务器，或者在未使用本插件的情况下将文件移动到其他位置，你将无法解密该文件。\n\n5. 请避免在服务器上手动管理文件。如果后续更换了服务器，请在启用加密的情况下重新上传仓库。\n\n6. 由于加密处理，同步过程完成所需的时间会稍长一些。',
+				titleDisabled: '已关闭加密',
+				titleEnabled: '已启用加密',
+			},
+		},
+		exhaustiveRemoteTraversal: {
+			desc: '在一次 WebDAV 请求中遍历整个远程目录树，包括所有子目录。这可以大幅减少大型目录的遍历时间，但可能与某些 WebDAV 服务器存在兼容性问题。（即在 PROPFIND 请求中发送 "Depth: infinity"）',
+			name: '彻底远程遍历',
+		},
+		fastRealtimeSync: {
+			desc: '在快速同步期间假设远程内容未发生变化，从而复用缓存数据并避免不必要的请求。这可以提高同步性能，但会忽略远程的更改。建议与启动同步或定时同步配合使用。',
+			name: '实时同步快速模式',
+		},
+		filters: {
+			add: '添加规则',
+			cancel: '取消',
+			confirmRemove: '确认删除',
+			desc: '添加同步时需要忽略文件或文件夹路径',
+			description: '符合这些规则的文件或文件夹在同步时会被忽略。使用 * 作为通配符。',
+			edit: '编辑规则',
+			exclude: {
+				desc: '匹配这些 Glob 模式的文件/文件夹将不会被同步。如需排除特定文件，请记得添加文件扩展名（例如：.md）。',
+				name: '排除规则',
+			},
+			include: {
+				desc: '匹配这些 Glob 模式的文件/文件夹将被同步（若已定义）。如需包含特定文件，请记得添加文件扩展名（例如：.md）。',
+				name: '包含规则',
+			},
+			name: '过滤器',
+			placeholder: '例如: .DS_Store, *.pdf',
+			remove: '删除',
+			save: '保存',
+		},
+		invalidValue: '无效数值，已恢复至上一次设置',
+		realtimeSync: {
+			desc: '一旦文件被修改，立即自动触发同步。请在输入框中设置从文件修改到触发同步之间的延迟。',
+			name: '实时同步',
+			placeholder: '同步延迟（例如 1s、500ms）',
+		},
+		remoteDir: {
+			desc: '输入远程目录',
+			edit: '编辑',
+			name: '远程目录',
+			placeholder: '输入远程目录',
+		},
+		scheduledSync: {
+			desc: '定期触发后台同步。请在输入框中设置周期性后台同步的间隔。',
+			name: '定时同步',
+			placeholder: '输入间隔时间（例如 10min、0.5h）',
+		},
+		sections: {
+			common: '通用设置',
+			development: '开发设置',
+			filters: '过滤规则',
+			service: '服务配置',
+		},
+		serverUrl: {
+			desc: '输入 WebDAV 服务的基准 URL',
+			name: 'WebDAV 服务器地址',
+			placeholder: 'https://example.com/webdav',
+		},
+		startupSync: {
+			desc: '在启动后自动触发同步。请在输入框中设置启动后的延迟时间，以便自动执行同步。',
+			name: '启动时自动同步',
+			placeholder: '输入延迟时间（例如 10s、1min）',
+		},
+		tips: {
+			desc: '⚠️ 同步过程可能会修改或删除本地文件。请在同步前备份重要文件。',
+			name: '提示',
+		},
+		unmergeableStrategy: {
+			desc: '为智能合并无法处理的文件（所有非 Markdown 文件）选择备选策略。',
+			name: '无法合并的冲突解决策略',
+		},
+		useGitStyle: {
+			desc: '启用后将使用 <<<<<<< 和 >>>>>>> 等标记来显示冲突，而不是 HTML 标记',
+			name: '使用 Git 样式的冲突标记',
+		},
+	},
+	sync: {
+		alreadyUpToDate: '✅ 已是最新状态',
+		awaitingConfirmation: '💤 等待确认',
+		cancelled: '⭕ 同步已取消',
+		complete: '✅ 同步完成',
+		completeWithFailed: '❌ 同步完成，但有 {{failedCount}} 个任务失败',
+		error: {
+			accountNotConfigured:
+				'尚未完成 WebDAV 账号配置，请先在设置中填写服务器地址、账号和凭证',
+			conflictsMarkedInFile: '发现冲突，已在文件中标记',
+			failedToAutoMerge: '自动合并失败',
+			failedToUploadMerged: '上传合并内容失败',
+			folderButFile: '期望是文件夹，却发现是文件: {{path}}',
+			localPathNotFound: '本地路径未找到: {{path}}',
+			notFound: '未找到: {{path}}',
+		},
+		failedStatus: '❌ 同步失败',
+		failedWithError: '❌ 同步失败，错误信息: {{error}}',
+		fileFolderConflict: {
+			file: '文件',
+			folder: '文件夹',
+			message: '无法同步：{{path}}在远程为{{remoteForm}}，但在本地为{{localForm}}',
+		},
+		fileOp: {
+			addRecord: '添加记录',
+			cleanRecord: '清理记录',
+			createLocalDir: '创建本地目录',
+			createRemoteDir: '创建远程目录',
+			download: '下载',
+			merge: '合并',
+			removeLocal: '删除本地',
+			removeLocalRecursively: '递归删除本地',
+			removeRemote: '删除远程',
+			removeRemoteRecursively: '递归删除远程',
+			sync: '同步',
+			upload: '上传',
+		},
+		preConnecting: '☎️ 检查连接',
+		progress: '⌛️ 同步进度: {{percent}}%',
+		runKind: {
+			fast: '快速',
+			normal: '普通',
+		},
+		startButton: '开始同步',
+		stopButton: '停止同步',
+		syncingFiles: '⌛️ 正在同步文件...',
+		walkingRemote: '🔍 远程扫描',
+	},
+	time: {
+		daysAgo: '{{count}}天前',
+		hoursAgo: '{{count}}小时前',
+		justNow: '刚刚',
+		longAgo: '很久前',
+		minutesAgo: '{{count}}分钟前',
+	},
+};
+
+export default translation;

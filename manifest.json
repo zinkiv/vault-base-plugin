@@ -1,0 +1,9 @@
+{
+	"id": "vault-hub",
+	"name": "Vault Hub",
+	"version": "0.2.0",
+	"minAppVersion": "1.12.3",
+	"description": "Bidirectional WebDAV vault sync with conflict handling, encryption, and auto sync.",
+	"author": "vault-hub contributors",
+	"isDesktopOnly": false
+}

@@ -1,0 +1,76 @@
+name: 🐛 Bug Report
+description: File a bug report to help us improve.
+title: '[Bug]: '
+labels: ['bug']
+
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to fill out this bug report!
+
+  - type: textarea
+    id: real-outcome
+    attributes:
+      label: Real Outcome
+      description: A brief and clear description on what happened.
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-outcome
+    attributes:
+      label: Expected Outcome
+      description: Tell us what do you think is the correct behaviour.
+      placeholder: Tell us what you expect!
+    validations:
+      required: true
+
+  - type: input
+    id: provider
+    attributes:
+      label: WebDAV Service Provider
+      description: The WebDAV service from which provider are you using?
+      placeholder: e.g., Nextcloud
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this behaviour?
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Wait for '....'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Paste relevant console or plugin logs. This will be formatted as code automatically.
+      render: shell
+      placeholder: Redact passwords, tokens, and vault contents before pasting.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Issue Policies
+      description: By submitting this issue, I agree to follow the issue policies below.
+      options:
+        - label: "I agree to follow this project's issue policies and confirm:"
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        - I have provided clear and reproducible information about the issue.
+        - I have ensured that this issue only contains one bug.
+        - I have checked historical bugs and there's no entry fitting this scenario.
+        - I have confirmed that the issue doesn't contain any sensitive information.
+        - Issues caused by non-standard WebDAV server configurations **will not be fixed**.
+        - Issues where maintainers have requested clarification / coordinated testing but the reporter hasn't provide any further information will be closed after 72 hours.

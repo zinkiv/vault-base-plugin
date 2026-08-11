@@ -1,0 +1,22 @@
+Vault Hub
+Copyright (C) 2026 Vault Hub contributors
+
+This project is a derivative of:
+
+1. Obsidian WebDAV Sync 2.5.14
+   https://github.com/hesprs/obsidian-webdav-sync
+   Copyright (C) 2026 Hesprs (Hēsperus) and collaborators
+
+2. Obsidian Nutstore Sync
+   https://github.com/nutstore/obsidian-nutstore-sync
+   Copyright (C) 2025-2026 Nutstore and contributors
+
+Both upstream projects are licensed under the GNU Affero General Public
+License version 3.
+
+Changes made in August 2026 include:
+- Rebranding the plugin id to vault-hub and isolating IndexedDB storage
+- Removing the v3 migration path
+- Replacing Bun-only release scripts with Node.js scripts
+- Keeping the bidirectional WebDAV sync core, encryption, and scheduler
+  from WebDAV Sync 2.5.14

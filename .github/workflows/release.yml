@@ -1,0 +1,48 @@
+name: Release Plugin
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Extract release notes
+        run: npm run notes -- "${{ github.ref_name }}"
+
+      - name: Build plugin
+        run: npm run package
+
+      - name: Verify tag
+        run: |
+          VERSION="$(node -p "require('./manifest.json').version")"
+          test "$GITHUB_REF_NAME" = "$VERSION"
+
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          files=(release/main.js release/manifest.json)
+          if [ -f release/styles.css ]; then
+            files+=(release/styles.css)
+          fi
+          gh release create "$tag" --title="$tag" --notes-file=release-notes.md "${files[@]}"

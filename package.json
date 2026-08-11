@@ -1,0 +1,50 @@
+{
+	"name": "vault-hub",
+	"version": "0.2.0",
+	"private": true,
+	"description": "Bidirectional WebDAV sync for Obsidian",
+	"keywords": [
+		"obsidian",
+		"sync",
+		"webdav"
+	],
+	"license": "AGPL-3.0",
+	"type": "module",
+	"main": "main.js",
+	"scripts": {
+		"dev": "cross-env MODE=dev tsdown --watch",
+		"inspect": "cross-env MODE=inspect tsdown",
+		"build": "tsdown",
+		"ver": "node scripts/version-bump.mjs",
+		"lint": "oxlint --fix && oxfmt",
+		"check": "tsc && oxlint && oxfmt --check",
+		"notes": "node scripts/release-notes.mjs",
+		"test": "bun --preload=./test/mocks --isolate test",
+		"package": "npm run build"
+	},
+	"devDependencies": {
+		"@noble/ciphers": "^2.2.0",
+		"@tsdown/css": "^0.22.2",
+		"@types/bun": "^1.3.14",
+		"@types/glob-to-regexp": "^0.4.4",
+		"@unocss/postcss": "66.7.4",
+		"@vitejs/devtools": "^0.3.1",
+		"bun": "^1.3.14",
+		"cross-env": "^10.0.0",
+		"glob-to-regexp": "^0.4.1",
+		"hash-wasm": "^4.12.0",
+		"localspace": "^1.3.0",
+		"node-diff3": "^3.2.1",
+		"obsidian": "^1.13.0",
+		"oxfmt": "^0.57.0",
+		"oxlint": "^1.68.0",
+		"oxlint-tsgolint": "^0.24.0",
+		"postcss-merge-rules": "^8.0.0",
+		"solid-js": "^1.9.13",
+		"tsdown": "^0.22.2",
+		"typescript": "^6.0.3",
+		"unocss": "66.7.4",
+		"unplugin-solid": "^1.0.0",
+		"webdav": "^5.10.0"
+	}
+}
