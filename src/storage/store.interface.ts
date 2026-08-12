@@ -9,7 +9,7 @@ export function createStorageUnavailableError(cause: unknown): Error {
 	return new Error('Sync state storage unavailable');
 }
 
-export const STORAGE_NAME = 'vault-hub';
+export const STORAGE_NAME = 'vault-base';
 export const SYNC_STATE_STORE_NAME = 'sync-state';
 export const BASE_TEXT_STORE_NAME = 'base-text';
 export const FILE_CHUNK_STORE_NAME = 'file-chunk';

@@ -1,4 +1,4 @@
-# Repository Atlas: Vault Hub
+# Repository Atlas: Vault Base
 
 ## Project Responsibility
 

@@ -21,7 +21,7 @@ const { traverseWebDAV } = await import('~/fs/webdav');
 
 test('uses remote-base-aware path when traversing child directories', async () => {
 	getDirectoryContentsMock.mockReset();
-	getDirectoryContentsMock.mockResolvedValueOnce([{ isDir: true, path: '/test/vault-hub/' }]);
+	getDirectoryContentsMock.mockResolvedValueOnce([{ isDir: true, path: '/test/vault-base/' }]);
 	getDirectoryContentsMock.mockResolvedValueOnce([]);
 
 	await traverseWebDAV({ token: 'token' });
@@ -38,7 +38,7 @@ test('uses remote-base-aware path when traversing child directories', async () =
 		2,
 		'https://dav.example.com/dav',
 		'token',
-		'/test/vault-hub/',
+		'/test/vault-base/',
 		false,
 		undefined,
 	);

@@ -1,5 +1,5 @@
-Vault Hub
-Copyright (C) 2026 Vault Hub contributors
+Vault Base
+Copyright (C) 2026 Vault Base contributors
 
 This project is a derivative of:
 
@@ -15,7 +15,7 @@ Both upstream projects are licensed under the GNU Affero General Public
 License version 3.
 
 Changes made in August 2026 include:
-- Rebranding the plugin id to vault-hub and isolating IndexedDB storage
+- Rebranding the plugin id to vault-base and isolating IndexedDB storage
 - Removing the v3 migration path
 - Replacing Bun-only release scripts with Node.js scripts
 - Keeping the bidirectional WebDAV sync core, encryption, and scheduler

@@ -36,7 +36,7 @@ export default class DeleteConfirmModal extends Modal {
 		instruction.setText(t('deleteConfirm.instruction'));
 
 		const treeContainer = contentEl.createDiv({
-			cls: 'vault-hub-delete-confirm-tree mb-3',
+			cls: 'vault-base-delete-confirm-tree mb-3',
 		});
 		this.renderTree = mountFileTree(treeContainer, {
 			controllerRef: (controller) => {

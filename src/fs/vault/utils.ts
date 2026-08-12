@@ -29,7 +29,7 @@ export async function prepareRangedDownloadTempPath(
 	vault: Vault,
 	localPath: string,
 ): Promise<string> {
-	const tempPath = normalizeVaultPath(`.trash/vault-hub/${localPath}.${Date.now()}.part`);
+	const tempPath = normalizeVaultPath(`.trash/vault-base/${localPath}.${Date.now()}.part`);
 	await ensureVaultDir(vault, vaultDirname(tempPath));
 	return tempPath;
 }

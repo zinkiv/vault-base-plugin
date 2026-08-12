@@ -1,6 +1,6 @@
 {
-	"name": "vault-hub",
-	"version": "0.2.0",
+	"name": "vault-base-plugin",
+	"version": "0.2.1",
 	"private": true,
 	"description": "Bidirectional WebDAV sync for Obsidian",
 	"keywords": [

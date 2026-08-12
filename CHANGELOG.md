@@ -1,9 +1,13 @@
 # Changelog
 
-## Vault Hub v0.2.0 - 2026-08-11
+## Vault Base v0.2.1 - 2026-08-12
 
-- Adopted the Obsidian WebDAV Sync 2.5.14 codebase as Vault Hub.
-- Rebranded plugin id, display name, and IndexedDB namespace to `vault-hub`.
+- Renamed project to `vault-base-plugin` and plugin id/display name to `vault-base` / Vault Base.
+
+## Vault Base v0.2.0 - 2026-08-11
+
+- Adopted the Obsidian WebDAV Sync 2.5.14 codebase as Vault Base.
+- Rebranded plugin id, display name, and IndexedDB namespace (previously `vault-hub`).
 - Removed the v3 migration path, related UI, and tests.
 - Replaced Bun-only version/release scripts with Node.js scripts for Windows.
 - Added `npm run package` to emit Obsidian store artifacts in `release/`.

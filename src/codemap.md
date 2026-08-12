@@ -2,7 +2,7 @@
 
 ## Responsibility
 
-Application root for the Vault Hub plugin. This folder boots the plugin, owns long-lived runtime services and stores, and bridges Obsidian lifecycle events to the sync engine, settings UI, and WebDAV transport.
+Application root for the Vault Base plugin. This folder boots the plugin, owns long-lived runtime services and stores, and bridges Obsidian lifecycle events to the sync engine, settings UI, and WebDAV transport.
 
 ## Design
 

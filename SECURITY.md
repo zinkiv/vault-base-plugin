@@ -1,6 +1,6 @@
 # Security Policy
 
-If you believe you have found a security vulnerability in Vault Hub, please report it privately instead of opening a public issue.
+If you believe you have found a security vulnerability in Vault Base, please report it privately instead of opening a public issue.
 
 Please include:
 

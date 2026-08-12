@@ -18,11 +18,11 @@ export default class SyncRibbonManager {
 	update() {
 		if (this.plugin.isSyncing) {
 			this.startRibbonEl.setAttr('aria-disabled', 'true');
-			this.startRibbonEl.addClass('vault-hub-spinning');
+			this.startRibbonEl.addClass('vault-base-spinning');
 			this.stopRibbonEl.classList.remove('hidden');
 		} else {
 			this.startRibbonEl.removeAttribute('aria-disabled');
-			this.startRibbonEl.removeClass('vault-hub-spinning');
+			this.startRibbonEl.removeClass('vault-base-spinning');
 			this.stopRibbonEl.classList.add('hidden');
 		}
 	}

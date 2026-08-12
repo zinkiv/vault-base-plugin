@@ -22,7 +22,7 @@ export default function App(props: FileTreeAppProps) {
 	props.controllerRef?.(controller);
 
 	return (
-		<div class="vault-hub-file-tree">
+		<div class="vault-base-file-tree">
 			<For each={data.orderedNodeIds}>
 				{(nodeId) => {
 					const node = data.nodes[nodeId],
@@ -36,11 +36,11 @@ export default function App(props: FileTreeAppProps) {
 						rowClass = task && !selectedById[nodeId] ? 'is-unselected' : '';
 					return (
 						<div
-							class={`vault-hub-file-tree__row ${rowClass}`.trim()}
+							class={`vault-base-file-tree__row ${rowClass}`.trim()}
 							style={{ 'padding-left': `${node.depth * 14}px` }}
 						>
 							<div
-								class="vault-hub-file-tree__main"
+								class="vault-base-file-tree__main"
 								onClick={() => {
 									const changed = controller.toggle(
 										nodeId,
@@ -58,10 +58,10 @@ export default function App(props: FileTreeAppProps) {
 								{task ? (
 									<input type="checkbox" checked={selectedById[nodeId]} />
 								) : (
-									<div class="vault-hub-file-tree__checkbox-spacer" />
+									<div class="vault-base-file-tree__checkbox-spacer" />
 								)}
 								<div
-									class="vault-hub-task__icon"
+									class="vault-base-task__icon"
 									ref={(element) => {
 										setIcon(element, icon.icon);
 										element.style.color = icon.color;
@@ -69,7 +69,7 @@ export default function App(props: FileTreeAppProps) {
 										setTooltip(element, getTaskName(task.name), { delay: 100 });
 									}}
 								/>
-								<div class="vault-hub-file-tree__label">{node.compressedLabel}</div>
+								<div class="vault-base-file-tree__label">{node.compressedLabel}</div>
 							</div>
 						</div>
 					);

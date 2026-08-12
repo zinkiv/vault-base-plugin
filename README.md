@@ -1,6 +1,6 @@
-# Vault Hub
+# Vault Base
 
-Vault Hub 是面向 Obsidian 的双向 WebDAV 同步插件，同时兼容桌面端与移动端。
+Vault Base（项目名 `vault-base-plugin`）是面向 Obsidian 的双向 WebDAV 同步插件，同时兼容桌面端与移动端。适合以 NAS WebDAV 作为中央仓库，在多端之间同步。
 
 ## 功能
 
@@ -22,7 +22,7 @@ npm run dev
 
 单元测试依赖 [Bun](https://bun.sh)。未安装时仍可进行类型检查与生产构建。
 
-开发构建会写入 `dist/`，并同步复制到 `release/`。把 `release/` 里的 `main.js`、`manifest.json`、`styles.css` 放到测试库的 `.obsidian/plugins/vault-hub/`，然后在 Obsidian 中启用插件。
+开发构建会写入 `dist/`，并同步复制到 `release/`。把 `release/` 里的 `main.js`、`manifest.json`、`styles.css` 放到测试库的 `.obsidian/plugins/vault-base/`，然后在 Obsidian 中启用插件。
 
 ## 构建与发布
 
