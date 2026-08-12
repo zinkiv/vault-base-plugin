@@ -1,5 +1,9 @@
 # Changelog
 
+## Vault Base v0.2.2 - 2026-08-12
+
+- Added English README content for the community directory listing.
+
 ## Vault Base v0.2.1 - 2026-08-12
 
 - Renamed project to `vault-base-plugin` and plugin id/display name to `vault-base` / Vault Base.
