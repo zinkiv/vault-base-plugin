@@ -1,5 +1,11 @@
 # Changelog
 
+## Vault Base v0.2.3 - 2026-08-19
+
+- Prevented an empty new local vault from wiping an existing remote repository.
+- Removed unsupported `localspace` write-coalesce options so typecheck passes on 2.1.0.
+- Documented commit, tag, and GitHub Release steps for publishing to the community directory.
+
 ## Vault Base v0.2.2 - 2026-08-12
 
 - Added English README content for the community directory listing.
