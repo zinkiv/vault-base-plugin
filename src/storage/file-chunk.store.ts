@@ -11,7 +11,6 @@ import {
 export default class IndexedDbFileChunkStore {
 	private initPromise: Promise<void> | undefined;
 	private readonly store = localspace.createInstance({
-		coalesceWrites: false,
 		driver: [localspace.INDEXEDDB],
 		name: STORAGE_NAME,
 		plugins: [ttlPlugin({ defaultTTL: 60 * 1000 * 60 * 10 })],

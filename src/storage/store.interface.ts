@@ -27,8 +27,6 @@ export abstract class BaseStore {
 
 	constructor(storeName: string) {
 		this.store = localspace.createInstance({
-			coalesceWindowMs: 500,
-			coalesceWrites: true,
 			driver: [localspace.INDEXEDDB],
 			name: STORAGE_NAME,
 			storeName,
