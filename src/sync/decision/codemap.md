@@ -28,7 +28,8 @@ merge fallback only used when paths are mergeable.
 2. It assembles `SyncDecisionInput` and a `TaskFactory` bound to concrete task classes.
 3. `twoWayDecider()` compares local/remote/record presence and change status, then emits tasks such
    as pull, push, merge, mkdir, remove, add-record, or clean-record. If the remote snapshot has no
-   files left, recorded local files are pushed instead of deleted.
+   files left, recorded local files are pushed instead of deleted. If no recorded files remain
+   locally, remote files are pulled instead of deleted so a new empty vault cannot wipe NAS.
 4. Orphaned records become clean-up tasks; file/folder type conflicts throw immediately.
 
 ## Integration

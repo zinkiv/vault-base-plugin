@@ -69,7 +69,9 @@ export default function App(props: FileTreeAppProps) {
 										setTooltip(element, getTaskName(task.name), { delay: 100 });
 									}}
 								/>
-								<div class="vault-base-file-tree__label">{node.compressedLabel}</div>
+								<div class="vault-base-file-tree__label">
+									{node.compressedLabel}
+								</div>
 							</div>
 						</div>
 					);

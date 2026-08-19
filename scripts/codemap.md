@@ -23,3 +23,4 @@ Houses standalone Node scripts for release management. One script bumps plugin m
 
 - `package.json` exposes `ver`, `notes`, and `package`.
 - Version scripts depend on `manifest.json`, `versions.json`, and `CHANGELOG.md` at the repo root.
+- Human release steps (bump, commit, tag, push, GitHub Release, community directory) live in the README **构建与发布** section.

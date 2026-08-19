@@ -44,19 +44,79 @@ npm run dev
 
 开发构建会写入 `dist/`，并同步复制到 `release/`。把 `release/` 里的 `main.js`、`manifest.json`、`styles.css` 放到测试库的 `.obsidian/plugins/vault-base/`，然后在 Obsidian 中启用插件。
 
-## 构建与发布
+## Build and release
+
+Local artifacts:
 
 ```bash
 npm run package
 ```
 
-Obsidian 商店产物在 `release/`：
+Obsidian store files land in `release/`: `main.js`, `manifest.json`, and `styles.css`.
 
-- `main.js`
-- `manifest.json`
-- `styles.css`
+To publish a version, bump first, then commit, tag, and push. The Git tag must match `manifest.json` exactly, with no `v` prefix. Pushing that tag runs GitHub Actions, which creates the GitHub Release the community directory downloads.
 
-Git 标签必须与 `manifest.json` 版本完全一致，且不要加 `v` 前缀。
+## 构建与发布
+
+本地产物：
+
+```bash
+npm run package
+```
+
+Obsidian 商店产物在 `release/`：`main.js`、`manifest.json`、`styles.css`。
+
+发新版本按下面做：**先改版本，再提交，再打 tag，再推送**。Git 标签必须与 `manifest.json` 版本完全一致，且不要加 `v` 前缀。把 tag 推到 GitHub 后，Actions 会自动建 Release；已经上架的插件不用再往商店提一次。
+
+### 1. 改版本和说明
+
+在 `CHANGELOG.md` 顶部加一节，标题里必须带目标版本号（Actions 靠它抽 Release notes）：
+
+```markdown
+## Vault Base v0.2.3 - 2026-08-19
+
+- Prevented an empty new local vault from wiping an existing remote repository.
+```
+
+然后 bump 版本文件（把 `0.2.3` 换成实际版本）：
+
+```bash
+npm version 0.2.3 --no-git-tag-version
+npm run ver
+```
+
+`npm run ver` 会同步 `manifest.json`、`versions.json`、`src/consts.ts`。核对这四处都是同一版本后再继续。
+
+### 2. 提交、打 tag、推送
+
+先提交全部改动，再打**注释 tag**，最后推分支和 tag。不要用 `v0.2.3`。
+
+```bash
+git add -A
+git commit -m "Prevent empty local vault from wiping remote files."
+git tag -a 0.2.3 -m "0.2.3"
+git push origin main
+git push origin 0.2.3
+```
+
+`origin` 会同时推 GitHub 和 Gitea。商店只认 GitHub：https://github.com/zinkiv/vault-base-plugin
+
+### 3. 确认 Release
+
+打开仓库的 Actions，等 **Release Plugin** 成功。完成后应出现：
+
+https://github.com/zinkiv/vault-base-plugin/releases/tag/0.2.3
+
+Release 资源里要有单独的 `main.js`、`manifest.json`、`styles.css`（不能只在 source zip 里）。
+
+### 4. 商店怎么更新
+
+| 情况 | 做什么 |
+| --- | --- |
+| 已经在 [community.obsidian.md](https://community.obsidian.md) 上架 | 不用再提交。用户端会按 GitHub 上最新 `manifest.json` 的 version，去对应 tag 的 Release 下载。 |
+| 还没过审 / 第一次上架 | 用 Obsidian 账号登录社区站，绑定 GitHub `zinkiv`，仓库填 `https://github.com/zinkiv/vault-base-plugin`（不要带 `.git`），提交后按 Scorecard 改。 |
+
+扫描可能要几小时。本机可在「第三方插件」里刷新，或用 [BRAT](https://obsidian.md/plugins?id=obsidian42-brat) 先装 GitHub 上的新版本。
 
 ## Sync notes
 

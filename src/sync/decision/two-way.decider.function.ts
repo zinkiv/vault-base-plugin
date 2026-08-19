@@ -23,6 +23,9 @@ export default function twoWayDecider(input: SyncDecisionInput): Array<BaseTask>
 	logger.debug('records', [...records.keys()]);
 
 	const remoteHasFiles = [...remoteStats.values()].some((stat) => !stat.isDir),
+		localHasRecordedFiles = [...records.entries()].some(
+			([path, record]) => !record.local.isDir && localStats.has(path),
+		),
 		tasks: Array<BaseTask> = [],
 		files: Array<{
 			path: string;
@@ -119,7 +122,8 @@ export default function twoWayDecider(input: SyncDecisionInput): Array<BaseTask>
 					if (remoteChanged && localChanged) caseName = 'RECORD_REMOTE_LOCAL_CONFLICT';
 					else if (remoteChanged) caseName = 'RECORD_REMOTE_LOCAL_PULL';
 					else if (localChanged) caseName = 'RECORD_REMOTE_LOCAL_PUSH';
-				} else if (remoteChanged) caseName = 'RECORD_REMOTE_NOLOCAL_PULL';
+				} else if (remoteChanged || !localHasRecordedFiles)
+					caseName = 'RECORD_REMOTE_NOLOCAL_PULL';
 				else caseName = 'RECORD_REMOTE_NOLOCAL_REMOVE';
 			} else if (local) {
 				localChanged = isChanged({
@@ -278,9 +282,10 @@ export default function twoWayDecider(input: SyncDecisionInput): Array<BaseTask>
 					source: 'remote',
 					tasks,
 				});
-				caseName = remoteChanged
-					? 'REMOTE_NOLOCAL_RECORD_PULL'
-					: 'REMOTE_NOLOCAL_RECORD_REMOVE';
+				caseName =
+					remoteChanged || !localHasRecordedFiles
+						? 'REMOTE_NOLOCAL_RECORD_PULL'
+						: 'REMOTE_NOLOCAL_RECORD_REMOVE';
 			}
 		} else if (local && remote) caseName = 'LOCAL_REMOTE_NORECORD_RECORD';
 		else if (local) caseName = 'LOCAL_NOREMOTE_NORECORD_PUSH';
