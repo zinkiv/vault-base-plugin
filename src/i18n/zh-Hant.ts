@@ -137,7 +137,7 @@ const zhHant: typeof en = {
 			placeholder: 'https://example.com/webdav',
 		},
 		startupSync: {
-			desc: '啟動後自動觸發同步。請在欄位中設定啟動後自動執行同步的延遲時間。',
+			desc: 'Obsidian 載入完成後再自動同步。啟動同步不會刪除遠端檔案。請設定至少數秒的延遲；0 ms 可能在庫尚未就緒時就開始同步。',
 			name: '啟動時同步',
 			placeholder: '輸入延遲（例如 10s、1min）',
 		},

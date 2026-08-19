@@ -103,8 +103,8 @@ export default class VaultHubPlugin extends Plugin {
 			value: 31_457_280,
 		},
 		startupSync: {
-			enabled: true,
-			value: 0,
+			enabled: false,
+			value: 10_000,
 		},
 		token: '',
 		unmergeableStrategy: UnmergeableStrategy.LatestTimeStamp,

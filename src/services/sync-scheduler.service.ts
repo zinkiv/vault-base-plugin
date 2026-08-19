@@ -55,18 +55,8 @@ export default class SyncSchedulerService {
 			this.plugin.registerEvent(this.plugin.app.vault.on('delete', this.onChange));
 			this.plugin.registerEvent(this.plugin.app.vault.on('modify', this.onChange));
 			this.plugin.registerEvent(this.plugin.app.vault.on('rename', this.onChange));
+			this.scheduleStartupAndIntervalSync();
 		});
-		const schedule = () => {
-			if (this.settings.scheduledSync.enabled) this.startScheduledSync();
-		};
-		if (this.settings.startupSync.enabled)
-			this.startupSyncTimer = window.setTimeout(() => {
-				void this.requestSync({
-					runKind: SyncRunKind.normal,
-					source: 'startup',
-				}).finally(schedule);
-			}, this.settings.startupSync.value);
-		else schedule();
 	}
 
 	unload() {
@@ -127,6 +117,22 @@ export default class SyncSchedulerService {
 			this.settings.realtimeSync.value,
 		);
 	};
+
+	private scheduleStartupAndIntervalSync() {
+		const startIntervalSync = () => {
+			if (this.settings.scheduledSync.enabled) this.startScheduledSync();
+		};
+		if (!this.settings.startupSync.enabled) {
+			startIntervalSync();
+			return;
+		}
+		this.startupSyncTimer = window.setTimeout(() => {
+			void this.requestSync({
+				runKind: SyncRunKind.normal,
+				source: 'startup',
+			}).finally(startIntervalSync);
+		}, this.settings.startupSync.value);
+	}
 
 	private async scheduleFlush() {
 		if (this.pendingRequests.length === 0 || this.isScheduling) return;

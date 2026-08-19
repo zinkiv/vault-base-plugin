@@ -14,7 +14,7 @@ Service-layer orchestration for sync lifecycle, scheduling, WebDAV client creati
 
 ## Flow
 
-1. Startup enables vault change listeners and optional startup/interval sync timers in the scheduler.
+1. Startup enables vault change listeners after the workspace is ready, then optional startup/interval sync timers in the scheduler. Startup sync waits for layout ready so it does not run against an incomplete vault.
 2. File events are filtered by glob rules; matching changes enqueue a sync request.
 3. Pending requests are flushed into a single execution request with merged trigger/source metadata.
 4. The executor waits for the plugin to be idle, then creates the WebDAV client, prepares encryption keys, and starts `SyncEngine` planning/execution.

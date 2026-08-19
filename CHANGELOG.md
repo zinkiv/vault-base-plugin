@@ -1,5 +1,11 @@
 # Changelog
 
+## Vault Base v0.2.6 - 2026-08-19
+
+- Startup sync waits until Obsidian has finished loading the vault.
+- Startup sync never deletes remote files; empty-vault auto-sync downloads them instead.
+- Startup sync is off by default for new installs. A delay of 0 ms is unsafe on an empty vault.
+
 ## Vault Base v0.2.5 - 2026-08-19
 
 - Pull recorded remote files into an empty local vault instead of reporting already up to date.

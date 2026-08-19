@@ -135,7 +135,7 @@ const en = {
 			placeholder: 'https://example.com/webdav',
 		},
 		startupSync: {
-			desc: 'Automatically trigger a sync after startup. Set the delay after startup to automatically perform a sync in the field.',
+			desc: 'Sync after Obsidian finishes loading. Startup sync never deletes remote files. Use a delay of at least a few seconds; 0 ms can run before the vault is ready.',
 			name: 'Startup sync',
 			placeholder: 'Enter delay (e.g. 10s, 1min)',
 		},

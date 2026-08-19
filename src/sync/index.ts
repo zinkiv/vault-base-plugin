@@ -40,6 +40,7 @@ import PushTask from './tasks/push.task';
 import RemoveLocalTask from './tasks/remove-local.task';
 import RemoveRemoteTask from './tasks/remove-remote.task';
 import { TaskError } from './tasks/task.interface';
+import shouldKeepRemoteOnAutoSync from './utils/keep-remote-on-auto';
 import optimizeTasks from './utils/optimize-tasks';
 
 type SyncResultSummary = {
@@ -125,34 +126,44 @@ export default class SyncEngine {
 				return currentRun;
 			}
 
-			const removeRemoteTasks = tasks.filter((task) => task instanceof RemoveRemoteTask);
-			if (removeRemoteTasks.length > 0) {
-				currentRun = updateSyncRunSnapshot(currentRun, {
-					planSummary: {
-						...this.summarizePlan(tasks),
-						requiresDeleteConfirmation: true,
-						warnings: [
-							{
-								code: 'remote_delete_confirmation',
-								messageKey: 'deleteConfirm.remoteWarningNotice',
-							},
-						],
-					},
-					stage: 'awaiting_confirmation',
-					timestamps: {
-						confirmationStartedAt:
-							currentRun.timestamps.confirmationStartedAt ?? Date.now(),
-					},
-				});
-				syncRun(currentRun);
-				const { tasksToDelete, tasksToDownload } = await new RemoteDeleteConfirmModal(
-						this.app,
-						removeRemoteTasks,
-					).openAndWait(),
-					downloadTasks = this.convertRemoteDeleteToDownload(tasksToDownload),
-					otherTasks = tasks.filter((task) => !(task instanceof RemoveRemoteTask));
-				tasks = [...tasksToDelete, ...downloadTasks, ...otherTasks];
-			}
+			const removeRemoteTasks = tasks.filter((task) => task instanceof RemoveRemoteTask),
+				localFileCount = this.vault.getFiles().length;
+			if (removeRemoteTasks.length > 0)
+				if (shouldKeepRemoteOnAutoSync(request.trigger, localFileCount)) {
+					logger.warn('Skipping remote deletion during auto sync; downloading instead', {
+						localFileCount,
+						trigger: request.trigger,
+					});
+					const downloadTasks = this.convertRemoteDeleteToDownload(removeRemoteTasks),
+						otherTasks = tasks.filter((task) => !(task instanceof RemoveRemoteTask));
+					tasks = [...downloadTasks, ...otherTasks];
+				} else {
+					currentRun = updateSyncRunSnapshot(currentRun, {
+						planSummary: {
+							...this.summarizePlan(tasks),
+							requiresDeleteConfirmation: true,
+							warnings: [
+								{
+									code: 'remote_delete_confirmation',
+									messageKey: 'deleteConfirm.remoteWarningNotice',
+								},
+							],
+						},
+						stage: 'awaiting_confirmation',
+						timestamps: {
+							confirmationStartedAt:
+								currentRun.timestamps.confirmationStartedAt ?? Date.now(),
+						},
+					});
+					syncRun(currentRun);
+					const { tasksToDelete, tasksToDownload } = await new RemoteDeleteConfirmModal(
+							this.app,
+							removeRemoteTasks,
+						).openAndWait(),
+						downloadTasks = this.convertRemoteDeleteToDownload(tasksToDownload),
+						otherTasks = tasks.filter((task) => !(task instanceof RemoveRemoteTask));
+					tasks = [...tasksToDelete, ...downloadTasks, ...otherTasks];
+				}
 
 			if (this.isCancelled) {
 				currentRun = finalizeSyncRun(currentRun, { stage: 'cancelled' });

@@ -136,7 +136,7 @@ const translation: typeof en = {
 			placeholder: 'https://example.com/webdav',
 		},
 		startupSync: {
-			desc: '在启动后自动触发同步。请在输入框中设置启动后的延迟时间，以便自动执行同步。',
+			desc: 'Obsidian 加载完成后再自动同步。启动同步不会删除远程文件。请设置至少几秒的延迟；0 ms 可能在库尚未就绪时就开始同步。',
 			name: '启动时自动同步',
 			placeholder: '输入延迟时间（例如 10s、1min）',
 		},
