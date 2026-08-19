@@ -1,5 +1,12 @@
 # Changelog
 
+## Vault Base v0.2.5 - 2026-08-19
+
+- Pull recorded remote files into an empty local vault instead of reporting already up to date.
+- Walk the WebDAV folder on fast sync when there are no records yet.
+- Do not create an empty remote folder, and do not discard a remote listing, when the local vault has no files.
+- Show a notice when both the vault and the selected remote folder are empty, so a wrong folder is easier to spot.
+
 ## Vault Base v0.2.4 - 2026-08-19
 
 - Stopped an empty new vault from deleting an existing remote repository, even when a shared name like Welcome.md overlaps.

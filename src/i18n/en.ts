@@ -4,16 +4,16 @@ const en = {
 		filePath: 'File path',
 		instruction:
 			'⚠️ The following local files will be deleted during auto-sync (because they were deleted remotely).\n\nCheck files to delete; unchecked files will be re-uploaded:',
-		select: 'Select',
-		skipForNow: 'Skip for now',
-		title: 'Confirm local file deletion',
-		warningNotice: 'Local files will be deleted, please confirm',
 		keepRemote: 'Keep remote files',
 		remoteDeleteSelected: 'Delete selected remote files',
 		remoteInstruction:
 			'⚠️ The following remote files will be deleted because they are missing locally.\n\nIf this is a new empty vault, keep the remote files. Deleting them cannot be undone.\n\nChecked files will be deleted on the server; unchecked files will be downloaded to this vault:',
 		remoteTitle: 'Confirm remote file deletion',
 		remoteWarningNotice: 'Remote files will be deleted, please confirm',
+		select: 'Select',
+		skipForNow: 'Skip for now',
+		title: 'Confirm local file deletion',
+		warningNotice: 'Local files will be deleted, please confirm',
 	},
 	dirSelector: {
 		cancel: 'Cancel',
@@ -192,6 +192,8 @@ const en = {
 		},
 		preConnecting: '☎️ Pre-connecting',
 		progress: '⌛️ Sync progress: {{percent}}%',
+		remoteDirectoryEmpty:
+			'Remote folder is empty. If your notes are in another folder, choose it in settings.',
 		runKind: {
 			fast: 'Fast',
 			normal: 'Normal',

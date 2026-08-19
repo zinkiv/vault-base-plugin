@@ -1,3 +1,4 @@
+import { Notice } from 'obsidian';
 import type { ProgressPatch } from '~/events';
 import type { SyncRecord } from '~/storage';
 import type { RecordStatsMap, StatsMap } from '~/types';
@@ -9,6 +10,7 @@ import {
 	remoteCollectionExists,
 	traverseWebDAV,
 } from '~/fs/webdav';
+import t from '~/i18n';
 import { useSettings } from '~/settings';
 import { SyncRunKind } from '~/types';
 import { resolveRemoteExecutionPath } from '~/utils/encryption';
@@ -70,35 +72,23 @@ export default class TwoWaySyncDecider {
 			remoteWalkSummary: {
 				completedItems: 0,
 				currentItem: this.remoteBaseDir,
-				totalItems: this.sync.runKind === SyncRunKind.fast ? 1 : 0,
+				totalItems: this.sync.runKind === SyncRunKind.fast && records.size > 0 ? 1 : 0,
 			},
 			stage: 'walking_remote',
 		});
-		const walkedRemoteStats =
-				this.sync.runKind === SyncRunKind.fast
-					? await loadCachedRemoteStatsIfValid({
-							records,
-							remoteBaseDir: this.remoteBaseDir,
-							token: this.token,
-						})
-					: await traverseWebDAV({
-							onProgress: (progress) =>
-								onProgress({
-									remoteWalkSummary: {
-										completedItems: progress.processedDirectories,
-										currentItem:
-											progress.currentDirectory ?? this.remoteBaseDir,
-										totalItems: progress.totalDirectories,
-									},
-									stage: 'walking_remote',
-								}),
-							throwIfCancelled: options?.throwIfCancelled,
-							token: this.token,
-						}),
+		const walkedRemoteStats = await loadCurrentRemoteStats({
+				onProgress,
+				records,
+				remoteBaseDir: this.remoteBaseDir,
+				runKind: this.sync.runKind,
+				throwIfCancelled: options?.throwIfCancelled,
+				token: this.token,
+			}),
 			currentRemoteStats = await discardStaleRemoteSnapshot(
 				walkedRemoteStats,
 				records,
 				this.token,
+				currentLocalStats,
 			),
 			commonTaskOptions = {
 				remoteBaseDir: this.remoteBaseDir,
@@ -136,9 +126,19 @@ export default class TwoWaySyncDecider {
 					unmergeableStrategy: this.sync.settings.unmergeableStrategy,
 				},
 				taskFactory,
-			};
+			},
+			tasks = twoWayDecider(decisionInput),
+			localHasFiles = [...currentLocalStats.values()].some((stat) => !stat.isDir),
+			remoteHasFiles = [...currentRemoteStats.values()].some((stat) => !stat.isDir);
 
-		return twoWayDecider(decisionInput);
+		if (tasks.length === 0 && !localHasFiles && !remoteHasFiles) {
+			logger.warn('Local vault and remote directory both have no files', {
+				remoteBaseDir: this.remoteBaseDir,
+			});
+			new Notice(t('sync.remoteDirectoryEmpty'), 8000);
+		}
+
+		return tasks;
 	}
 }
 
@@ -153,31 +153,53 @@ async function extractRemoteRecords(records: RecordStatsMap): Promise<StatsMap> 
 	);
 }
 
-async function loadCachedRemoteStatsIfValid({
+async function loadCurrentRemoteStats({
+	onProgress,
 	records,
 	remoteBaseDir,
+	runKind,
+	throwIfCancelled,
 	token,
 }: {
+	onProgress: (progress: ProgressPatch) => void;
 	records: RecordStatsMap;
 	remoteBaseDir: string;
+	runKind: SyncRunKind;
+	throwIfCancelled?: () => void;
 	token: string;
 }): Promise<StatsMap> {
 	const { customHeaders, serverUrl } = await useSettings(),
 		exists = await remoteCollectionExists(serverUrl, token, remoteBaseDir, customHeaders);
 	if (!exists) {
-		logger.warn('Remote base directory is missing; ignoring cached remote records');
+		logger.warn('Remote base directory is missing; treating remote as empty', {
+			remoteBaseDir,
+		});
 		return new Map();
 	}
-
-	return extractRemoteRecords(records);
+	if (runKind === SyncRunKind.fast && records.size > 0) return extractRemoteRecords(records);
+	return traverseWebDAV({
+		onProgress: (progress) =>
+			onProgress({
+				remoteWalkSummary: {
+					completedItems: progress.processedDirectories,
+					currentItem: progress.currentDirectory ?? remoteBaseDir,
+					totalItems: progress.totalDirectories,
+				},
+				stage: 'walking_remote',
+			}),
+		throwIfCancelled,
+		token,
+	});
 }
 
 async function discardStaleRemoteSnapshot(
 	remoteStats: StatsMap,
 	records: RecordStatsMap,
 	token: string,
+	localStats: StatsMap,
 ): Promise<StatsMap> {
 	if (remoteStats.size === 0) return remoteStats;
+	if (![...localStats.values()].some((stat) => !stat.isDir)) return remoteStats;
 
 	const { customHeaders, serverUrl } = await useSettings(),
 		samples: Array<string> = [];

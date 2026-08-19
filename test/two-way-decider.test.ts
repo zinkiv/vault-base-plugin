@@ -256,6 +256,59 @@ test('pulls remote files when only a shared Welcome.md overlaps a recorded tree'
 	expect(created).not.toContainEqual({ path: 'Welcome.md', type: 'removeRemote' });
 });
 
+test('downloads recorded files when the local vault and remote snapshot are both empty', () => {
+	const local: StatsMap = new Map(),
+		remote: StatsMap = new Map(),
+		records: RecordStatsMap = new Map([
+			['note.md', { local: fileStat('note.md'), remote: fileStat('/test/note.md') }],
+			['notes', { local: folderStat('notes'), remote: folderStat('/test/notes') }],
+		]),
+		{ created, factory } = stubFactory();
+
+	twoWayDecider({
+		currentLocalStats: local,
+		currentRemoteStats: remote,
+		records,
+		remoteBaseDir: '/test/',
+		settings: {
+			conflictStrategy: ConflictStrategy.KeepLocal,
+			unmergeableStrategy: UnmergeableStrategy.KeepLocal,
+		},
+		taskFactory: factory,
+	});
+
+	expect(created).toContainEqual({ path: 'note.md', type: 'download' });
+	expect(created).toContainEqual({ path: 'notes', type: 'mkdirLocal' });
+	expect(created).not.toContainEqual({ path: 'note.md', type: 'cleanRecord' });
+	expect(created).not.toContainEqual({ path: 'notes', type: 'removeRemote' });
+});
+
+test('cleans orphan records when the remote still has other files', () => {
+	const local: StatsMap = new Map(),
+		remote: StatsMap = new Map([['keep.md', fileStat('/test/keep.md')]]),
+		records: RecordStatsMap = new Map([
+			['keep.md', { local: fileStat('keep.md'), remote: fileStat('/test/keep.md') }],
+			['gone.md', { local: fileStat('gone.md'), remote: fileStat('/test/gone.md') }],
+		]),
+		{ created, factory } = stubFactory();
+
+	twoWayDecider({
+		currentLocalStats: local,
+		currentRemoteStats: remote,
+		records,
+		remoteBaseDir: '/test/',
+		settings: {
+			conflictStrategy: ConflictStrategy.KeepLocal,
+			unmergeableStrategy: UnmergeableStrategy.KeepLocal,
+		},
+		taskFactory: factory,
+	});
+
+	expect(created).toContainEqual({ path: 'keep.md', type: 'download' });
+	expect(created).toContainEqual({ path: 'gone.md', type: 'cleanRecord' });
+	expect(created).not.toContainEqual({ path: 'gone.md', type: 'download' });
+});
+
 test('pulls remote files when the overlapping local file does not match the record', () => {
 	const local: StatsMap = new Map([['Welcome.md', fileStat('Welcome.md', 99)]]),
 		remote: StatsMap = new Map([

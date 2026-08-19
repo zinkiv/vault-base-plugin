@@ -44,8 +44,25 @@ export default function twoWayDecider(input: SyncDecisionInput): Array<BaseTask>
 
 	new Set([...localStats.keys(), ...remoteStats.keys(), ...records.keys()]).forEach((path) => {
 		const remote = remoteStats.get(path),
-			local = localStats.get(path);
-		if (!local && !remote) removeRecords.push(path);
+			local = localStats.get(path),
+			record = records.get(path);
+		if (!local && !remote)
+			if (
+				localLooksFresh &&
+				!remoteHasFiles &&
+				record &&
+				!record.remote.isDir &&
+				!record.local.isDir
+			)
+				files.push({ path, remote: record.remote });
+			else if (
+				localLooksFresh &&
+				!remoteHasFiles &&
+				record?.remote.isDir &&
+				record.local.isDir
+			)
+				folders.push({ path, remote: record.remote });
+			else removeRecords.push(path);
 		else if (local?.isDir !== true && remote?.isDir !== true)
 			files.push({ local, path, remote });
 		else if (local?.isDir !== false && remote?.isDir !== false)
@@ -464,8 +481,8 @@ function localVaultLooksFresh(records: RecordStatsMap, localStats: StatsMap): bo
 	const localHasFiles = [...localStats.values()].some((stat) => !stat.isDir);
 	if (!localHasFiles && records.size > 0) {
 		logger.warn('Local vault has no files; pulling remote instead of deleting', {
-			recordedFileCount,
 			recordCount: records.size,
+			recordedFileCount,
 		});
 		return true;
 	}

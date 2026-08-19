@@ -317,6 +317,13 @@ export default class SyncEngine {
 		);
 
 		if (!remoteBaseDirExists) {
+			if (this.vault.getFiles().length === 0) {
+				logger.warn(
+					'Remote base directory is missing and local vault is empty; not creating it',
+					{ remoteDir },
+				);
+				return;
+			}
 			logger.warn(
 				'Remote base directory is missing; dropping sync records and recreating it',
 				{

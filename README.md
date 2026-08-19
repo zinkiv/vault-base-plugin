@@ -111,10 +111,10 @@ Release 资源里要有单独的 `main.js`、`manifest.json`、`styles.css`（�
 
 ### 4. 商店怎么更新
 
-| 情况 | 做什么 |
-| --- | --- |
-| 已经在 [community.obsidian.md](https://community.obsidian.md) 上架 | 不用再提交。用户端会按 GitHub 上最新 `manifest.json` 的 version，去对应 tag 的 Release 下载。 |
-| 还没过审 / 第一次上架 | 用 Obsidian 账号登录社区站，绑定 GitHub `zinkiv`，仓库填 `https://github.com/zinkiv/vault-base-plugin`（不要带 `.git`），提交后按 Scorecard 改。 |
+| 情况                                                               | 做什么                                                                                                                                           |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 已经在 [community.obsidian.md](https://community.obsidian.md) 上架 | 不用再提交。用户端会按 GitHub 上最新 `manifest.json` 的 version，去对应 tag 的 Release 下载。                                                    |
+| 还没过审 / 第一次上架                                              | 用 Obsidian 账号登录社区站，绑定 GitHub `zinkiv`，仓库填 `https://github.com/zinkiv/vault-base-plugin`（不要带 `.git`），提交后按 Scorecard 改。 |
 
 扫描可能要几小时。本机可在「第三方插件」里刷新，或用 [BRAT](https://obsidian.md/plugins?id=obsidian42-brat) 先装 GitHub 上的新版本。
 

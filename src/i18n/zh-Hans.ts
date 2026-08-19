@@ -6,16 +6,16 @@ const translation: typeof en = {
 		filePath: '文件路径',
 		instruction:
 			'⚠️ 在自动同步过程中检测到以下本地文件将被删除（因远程已删除）。\n\n勾选要删除的文件，未勾选的文件将重新上传到远程：',
-		select: '选择',
-		skipForNow: '暂时忽略',
-		title: '确认删除本地文件',
-		warningNotice: '检测到本地文件将被删除，请确认',
 		keepRemote: '保留远程文件',
 		remoteDeleteSelected: '删除选中的远程文件',
 		remoteInstruction:
 			'⚠️ 以下远程文件将被删除（因为本地没有这些文件）。\n\n如果这是新建的空库，请选择保留远程文件。删除后无法从插件恢复。\n\n勾选要从服务器删除的文件；未勾选的会下载到本库：',
 		remoteTitle: '确认删除远程文件',
 		remoteWarningNotice: '远程文件将被删除，请确认',
+		select: '选择',
+		skipForNow: '暂时忽略',
+		title: '确认删除本地文件',
+		warningNotice: '检测到本地文件将被删除，请确认',
 	},
 	dirSelector: {
 		cancel: '取消',
@@ -192,6 +192,7 @@ const translation: typeof en = {
 		},
 		preConnecting: '☎️ 检查连接',
 		progress: '⌛️ 同步进度: {{percent}}%',
+		remoteDirectoryEmpty: '远程目录为空。如果笔记在其他文件夹，请在设置中选择正确的远程目录。',
 		runKind: {
 			fast: '快速',
 			normal: '普通',

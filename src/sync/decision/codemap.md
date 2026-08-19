@@ -23,15 +23,19 @@ merge fallback only used when paths are mergeable.
 ## Flow
 
 1. `TwoWaySyncDecider.decide()` loads records, traverses local vault state, and resolves remote
-   state either by fast record extraction or a full WebDAV walk. Cached or listed remote files are
-   discarded when PROPFIND/stat shows they are gone, so a wiped remote re-uploads instead of no-op.
+   state either by fast record extraction or a full WebDAV walk. Fast mode still walks WebDAV when
+   there are no records. Cached or listed remote files are discarded when PROPFIND/stat shows they
+   are gone _and_ the local vault still has files, so a wiped remote re-uploads instead of no-op.
+   An empty local vault keeps the remote snapshot so files can be pulled. Missing remote folders
+   are not auto-created when the local vault is empty.
 2. It assembles `SyncDecisionInput` and a `TaskFactory` bound to concrete task classes.
 3. `twoWayDecider()` compares local/remote/record presence and change status, then emits tasks such
    as pull, push, merge, mkdir, remove, add-record, or clean-record. If the remote snapshot has no
    files left, recorded local files are pushed instead of deleted. If the local vault looks fresh
    (no unchanged recorded files, or only a small fraction of the recorded tree is present), remote
    files are pulled instead of deleted so a new vault cannot wipe NAS even when a name like
-   `Welcome.md` overlaps.
+   `Welcome.md` overlaps. If both local and the remote snapshot are empty, recorded remote paths
+   are pulled instead of cleaned, and a notice asks the user to pick another remote folder.
 4. Orphaned records become clean-up tasks; file/folder type conflicts throw immediately.
 
 ## Integration

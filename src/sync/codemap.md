@@ -16,7 +16,7 @@
 
 ## Flow
 
-1. `SyncEngine.preparePlan()` creates a `SyncRecord`, ensures the remote base directory exists, then asks `TwoWaySyncDecider` for a task list.
+1. `SyncEngine.preparePlan()` creates a `SyncRecord`, ensures the remote base directory exists when the local vault has files, then asks `TwoWaySyncDecider` for a task list. An empty local vault does not create a missing remote folder.
 2. The decider loads records, walks local vault state, gets remote state, applies conflict/change rules, and produces tasks such as push, pull, merge, mkdir, remove, add-record, and clean-record.
 3. `SyncEngine.start()` stores plan summary, asks before remote deletes (and optionally before auto-sync local deletes), then passes tasks through `optimizeTasks()`.
 4. Execution runs task groups in parallel, updates progress after displayable tasks, retries transient failures, and stops on cancellation.

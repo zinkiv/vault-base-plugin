@@ -6,16 +6,16 @@ const zhHant: typeof en = {
 		filePath: '檔案路徑',
 		instruction:
 			'⚠️ 以下本機檔案將在自動同步時被刪除（因為它們已在遠端被刪除）。\n\n請勾選要刪除的檔案；未勾選的檔案將被重新上傳：',
-		select: '選擇',
-		skipForNow: '暫時跳過',
-		title: '確認刪除本機檔案',
-		warningNotice: '本機檔案即將被刪除，請確認',
 		keepRemote: '保留遠端檔案',
 		remoteDeleteSelected: '刪除已選遠端檔案',
 		remoteInstruction:
 			'⚠️ 以下遠端檔案將被刪除（因為本機沒有這些檔案）。\n\n如果這是新建的空庫，請選擇保留遠端檔案。刪除後無法從外掛恢復。\n\n請勾選要從伺服器刪除的檔案；未勾選的會下載到本庫：',
 		remoteTitle: '確認刪除遠端檔案',
 		remoteWarningNotice: '遠端檔案即將被刪除，請確認',
+		select: '選擇',
+		skipForNow: '暫時跳過',
+		title: '確認刪除本機檔案',
+		warningNotice: '本機檔案即將被刪除，請確認',
 	},
 	dirSelector: {
 		cancel: '取消',
@@ -193,6 +193,7 @@ const zhHant: typeof en = {
 		},
 		preConnecting: '☎️ 預先連線中',
 		progress: '⌛️ 同步進度：{{percent}}%',
+		remoteDirectoryEmpty: '遠端目錄為空。如果筆記在其他資料夾，請在設定中選擇正確的遠端目錄。',
 		runKind: {
 			fast: '快速',
 			normal: '標準',
