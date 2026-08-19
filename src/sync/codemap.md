@@ -18,7 +18,7 @@
 
 1. `SyncEngine.preparePlan()` creates a `SyncRecord`, ensures the remote base directory exists, then asks `TwoWaySyncDecider` for a task list.
 2. The decider loads records, walks local vault state, gets remote state, applies conflict/change rules, and produces tasks such as push, pull, merge, mkdir, remove, add-record, and clean-record.
-3. `SyncEngine.start()` stores plan summary, optionally asks for auto-sync delete confirmation, then passes tasks through `optimizeTasks()`.
+3. `SyncEngine.start()` stores plan summary, asks before remote deletes (and optionally before auto-sync local deletes), then passes tasks through `optimizeTasks()`.
 4. Execution runs task groups in parallel, updates progress after displayable tasks, retries transient failures, and stops on cancellation.
 5. Finalization writes result and error summaries into the run snapshot and closes the run as completed, failed, cancelled, or noop.
 

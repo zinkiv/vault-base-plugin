@@ -10,6 +10,12 @@ const zhHant: typeof en = {
 		skipForNow: '暫時跳過',
 		title: '確認刪除本機檔案',
 		warningNotice: '本機檔案即將被刪除，請確認',
+		keepRemote: '保留遠端檔案',
+		remoteDeleteSelected: '刪除已選遠端檔案',
+		remoteInstruction:
+			'⚠️ 以下遠端檔案將被刪除（因為本機沒有這些檔案）。\n\n如果這是新建的空庫，請選擇保留遠端檔案。刪除後無法從外掛恢復。\n\n請勾選要從伺服器刪除的檔案；未勾選的會下載到本庫：',
+		remoteTitle: '確認刪除遠端檔案',
+		remoteWarningNotice: '遠端檔案即將被刪除，請確認',
 	},
 	dirSelector: {
 		cancel: '取消',

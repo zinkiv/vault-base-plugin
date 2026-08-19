@@ -9,6 +9,7 @@ import type {
 } from '~/events';
 import type { SyncExecutionRequest } from '~/services/sync-executor.service';
 import DeleteConfirmModal from '~/components/DeleteConfirmModal';
+import RemoteDeleteConfirmModal from '~/components/RemoteDeleteConfirmModal';
 import { syncRun, syncCancel, updateSyncRunSnapshot } from '~/events';
 import finalizeSyncRun from '~/events/sync-terminate';
 import { statItem } from '~/fs/vault';
@@ -32,9 +33,12 @@ import {
 } from './errors';
 import AddRecordTask from './tasks/add-record.task';
 import CleanRecordTask from './tasks/clean-record.task';
+import MkdirLocalTask from './tasks/mkdir-local.task';
 import MkdirRemoteTask from './tasks/mkdir-remote.task';
+import PullTask from './tasks/pull.task';
 import PushTask from './tasks/push.task';
 import RemoveLocalTask from './tasks/remove-local.task';
+import RemoveRemoteTask from './tasks/remove-remote.task';
 import { TaskError } from './tasks/task.interface';
 import optimizeTasks from './utils/optimize-tasks';
 
@@ -114,6 +118,40 @@ export default class SyncEngine {
 					stage: 'completed_noop',
 				});
 				return currentRun;
+			}
+
+			if (this.isCancelled) {
+				currentRun = finalizeSyncRun(currentRun, { stage: 'cancelled' });
+				return currentRun;
+			}
+
+			const removeRemoteTasks = tasks.filter((task) => task instanceof RemoveRemoteTask);
+			if (removeRemoteTasks.length > 0) {
+				currentRun = updateSyncRunSnapshot(currentRun, {
+					planSummary: {
+						...this.summarizePlan(tasks),
+						requiresDeleteConfirmation: true,
+						warnings: [
+							{
+								code: 'remote_delete_confirmation',
+								messageKey: 'deleteConfirm.remoteWarningNotice',
+							},
+						],
+					},
+					stage: 'awaiting_confirmation',
+					timestamps: {
+						confirmationStartedAt:
+							currentRun.timestamps.confirmationStartedAt ?? Date.now(),
+					},
+				});
+				syncRun(currentRun);
+				const { tasksToDelete, tasksToDownload } = await new RemoteDeleteConfirmModal(
+						this.app,
+						removeRemoteTasks,
+					).openAndWait(),
+					downloadTasks = this.convertRemoteDeleteToDownload(tasksToDownload),
+					otherTasks = tasks.filter((task) => !(task instanceof RemoveRemoteTask));
+				tasks = [...tasksToDelete, ...downloadTasks, ...otherTasks];
 			}
 
 			if (this.isCancelled) {
@@ -238,6 +276,21 @@ export default class SyncEngine {
 				throw new Error(`Local file item not found during reupload: ${options.localPath}`);
 			if (local.isDir) final.push(new MkdirRemoteTask({ ...options, local }));
 			else final.push(new PushTask({ ...options, local }));
+		}
+		return final;
+	}
+
+	private convertRemoteDeleteToDownload(tasks: Array<RemoveRemoteTask>) {
+		const final: Array<PullTask | MkdirLocalTask> = [];
+		for (const task of tasks) {
+			const options = task.options,
+				remote = options.remote;
+			if (!remote)
+				throw new Error(
+					`Remote file item not found during download: ${options.remotePath}`,
+				);
+			if (remote.isDir) final.push(new MkdirLocalTask({ ...options, remote }));
+			else final.push(new PullTask({ ...options, remote }));
 		}
 		return final;
 	}

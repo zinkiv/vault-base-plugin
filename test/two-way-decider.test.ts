@@ -195,3 +195,91 @@ test('recreates local folders instead of deleting remote when local has no recor
 	expect(created).not.toContainEqual({ path: 'notes', type: 'removeRemote' });
 	expect(created).not.toContainEqual({ path: 'notes/a.md', type: 'removeRemote' });
 });
+
+test('recreates remote folders locally when the vault is empty and only folder records remain', () => {
+	const local: StatsMap = new Map(),
+		remote: StatsMap = new Map([['notes', folderStat('/test/notes')]]),
+		records: RecordStatsMap = new Map([
+			['notes', { local: folderStat('notes'), remote: folderStat('/test/notes') }],
+		]),
+		{ created, factory } = stubFactory();
+
+	twoWayDecider({
+		currentLocalStats: local,
+		currentRemoteStats: remote,
+		records,
+		remoteBaseDir: '/test/',
+		settings: {
+			conflictStrategy: ConflictStrategy.KeepLocal,
+			unmergeableStrategy: UnmergeableStrategy.KeepLocal,
+		},
+		taskFactory: factory,
+	});
+
+	expect(created).toContainEqual({ path: 'notes', type: 'mkdirLocal' });
+	expect(created).not.toContainEqual({ path: 'notes', type: 'removeRemote' });
+});
+
+test('pulls remote files when only a shared Welcome.md overlaps a recorded tree', () => {
+	const local: StatsMap = new Map([['Welcome.md', fileStat('Welcome.md')]]),
+		remote: StatsMap = new Map([
+			['Welcome.md', fileStat('/test/Welcome.md')],
+			['a.md', fileStat('/test/a.md')],
+			['b.md', fileStat('/test/b.md')],
+			['c.md', fileStat('/test/c.md')],
+			['d.md', fileStat('/test/d.md')],
+		]),
+		records: RecordStatsMap = new Map([
+			['Welcome.md', { local: fileStat('Welcome.md'), remote: fileStat('/test/Welcome.md') }],
+			['a.md', { local: fileStat('a.md'), remote: fileStat('/test/a.md') }],
+			['b.md', { local: fileStat('b.md'), remote: fileStat('/test/b.md') }],
+			['c.md', { local: fileStat('c.md'), remote: fileStat('/test/c.md') }],
+			['d.md', { local: fileStat('d.md'), remote: fileStat('/test/d.md') }],
+		]),
+		{ created, factory } = stubFactory();
+
+	twoWayDecider({
+		currentLocalStats: local,
+		currentRemoteStats: remote,
+		records,
+		remoteBaseDir: '/test/',
+		settings: {
+			conflictStrategy: ConflictStrategy.KeepLocal,
+			unmergeableStrategy: UnmergeableStrategy.KeepLocal,
+		},
+		taskFactory: factory,
+	});
+
+	expect(created).toContainEqual({ path: 'a.md', type: 'download' });
+	expect(created).toContainEqual({ path: 'b.md', type: 'download' });
+	expect(created).not.toContainEqual({ path: 'a.md', type: 'removeRemote' });
+	expect(created).not.toContainEqual({ path: 'Welcome.md', type: 'removeRemote' });
+});
+
+test('pulls remote files when the overlapping local file does not match the record', () => {
+	const local: StatsMap = new Map([['Welcome.md', fileStat('Welcome.md', 99)]]),
+		remote: StatsMap = new Map([
+			['Welcome.md', fileStat('/test/Welcome.md')],
+			['note.md', fileStat('/test/note.md')],
+		]),
+		records: RecordStatsMap = new Map([
+			['Welcome.md', { local: fileStat('Welcome.md'), remote: fileStat('/test/Welcome.md') }],
+			['note.md', { local: fileStat('note.md'), remote: fileStat('/test/note.md') }],
+		]),
+		{ created, factory } = stubFactory();
+
+	twoWayDecider({
+		currentLocalStats: local,
+		currentRemoteStats: remote,
+		records,
+		remoteBaseDir: '/test/',
+		settings: {
+			conflictStrategy: ConflictStrategy.KeepLocal,
+			unmergeableStrategy: UnmergeableStrategy.KeepLocal,
+		},
+		taskFactory: factory,
+	});
+
+	expect(created).toContainEqual({ path: 'note.md', type: 'download' });
+	expect(created).not.toContainEqual({ path: 'note.md', type: 'removeRemote' });
+});

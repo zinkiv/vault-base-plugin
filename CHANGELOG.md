@@ -1,5 +1,10 @@
 # Changelog
 
+## Vault Base v0.2.4 - 2026-08-19
+
+- Stopped an empty new vault from deleting an existing remote repository, even when a shared name like Welcome.md overlaps.
+- Ask for confirmation before deleting remote files. Keeping remote files downloads them to this vault instead of wiping the server.
+
 ## Vault Base v0.2.3 - 2026-08-19
 
 - Prevented an empty new local vault from wiping an existing remote repository.

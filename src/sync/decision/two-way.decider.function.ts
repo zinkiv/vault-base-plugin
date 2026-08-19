@@ -1,4 +1,4 @@
-import type { FileStatModel, FolderStatModel, StatModel } from '~/types';
+import type { FileStatModel, FolderStatModel, RecordStatsMap, StatModel, StatsMap } from '~/types';
 import t from '~/i18n';
 import { normalizePathToAbsolute } from '~/platform/path';
 import { ConflictStrategy, UnmergeableStrategy } from '~/settings';
@@ -23,9 +23,7 @@ export default function twoWayDecider(input: SyncDecisionInput): Array<BaseTask>
 	logger.debug('records', [...records.keys()]);
 
 	const remoteHasFiles = [...remoteStats.values()].some((stat) => !stat.isDir),
-		localHasRecordedFiles = [...records.entries()].some(
-			([path, record]) => !record.local.isDir && localStats.has(path),
-		),
+		localLooksFresh = localVaultLooksFresh(records, localStats),
 		tasks: Array<BaseTask> = [],
 		files: Array<{
 			path: string;
@@ -122,7 +120,7 @@ export default function twoWayDecider(input: SyncDecisionInput): Array<BaseTask>
 					if (remoteChanged && localChanged) caseName = 'RECORD_REMOTE_LOCAL_CONFLICT';
 					else if (remoteChanged) caseName = 'RECORD_REMOTE_LOCAL_PULL';
 					else if (localChanged) caseName = 'RECORD_REMOTE_LOCAL_PUSH';
-				} else if (remoteChanged || !localHasRecordedFiles)
+				} else if (remoteChanged || localLooksFresh)
 					caseName = 'RECORD_REMOTE_NOLOCAL_PULL';
 				else caseName = 'RECORD_REMOTE_NOLOCAL_REMOVE';
 			} else if (local) {
@@ -283,7 +281,7 @@ export default function twoWayDecider(input: SyncDecisionInput): Array<BaseTask>
 					tasks,
 				});
 				caseName =
-					remoteChanged || !localHasRecordedFiles
+					remoteChanged || localLooksFresh
 						? 'REMOTE_NOLOCAL_RECORD_PULL'
 						: 'REMOTE_NOLOCAL_RECORD_REMOVE';
 			}
@@ -439,4 +437,50 @@ export default function twoWayDecider(input: SyncDecisionInput): Array<BaseTask>
 	}
 
 	return tasks;
+}
+
+const FRESH_LOCAL_MAX_RECORDED_HIT_RATIO = 0.2;
+
+function localVaultLooksFresh(records: RecordStatsMap, localStats: StatsMap): boolean {
+	let recordedFileCount = 0,
+		localRecordedFileCount = 0,
+		unchangedRecordedFiles = 0;
+	for (const [path, record] of records) {
+		if (record.local.isDir) continue;
+		recordedFileCount++;
+		const local = localStats.get(path);
+		if (!local || local.isDir) continue;
+		localRecordedFileCount++;
+		if (
+			!isChanged({
+				currentStats: localStats,
+				path,
+				records,
+				source: 'local',
+			})
+		)
+			unchangedRecordedFiles++;
+	}
+	const localHasFiles = [...localStats.values()].some((stat) => !stat.isDir);
+	if (!localHasFiles && records.size > 0) {
+		logger.warn('Local vault has no files; pulling remote instead of deleting', {
+			recordedFileCount,
+			recordCount: records.size,
+		});
+		return true;
+	}
+	if (recordedFileCount === 0) return false;
+	const looksFresh =
+		unchangedRecordedFiles === 0 ||
+		localRecordedFileCount / recordedFileCount <= FRESH_LOCAL_MAX_RECORDED_HIT_RATIO;
+	if (looksFresh)
+		logger.warn(
+			'Local vault has little overlap with sync records; pulling remote instead of deleting',
+			{
+				localRecordedFileCount,
+				recordedFileCount,
+				unchangedRecordedFiles,
+			},
+		);
+	return looksFresh;
 }

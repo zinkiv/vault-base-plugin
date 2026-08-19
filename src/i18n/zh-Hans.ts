@@ -10,6 +10,12 @@ const translation: typeof en = {
 		skipForNow: '暂时忽略',
 		title: '确认删除本地文件',
 		warningNotice: '检测到本地文件将被删除，请确认',
+		keepRemote: '保留远程文件',
+		remoteDeleteSelected: '删除选中的远程文件',
+		remoteInstruction:
+			'⚠️ 以下远程文件将被删除（因为本地没有这些文件）。\n\n如果这是新建的空库，请选择保留远程文件。删除后无法从插件恢复。\n\n勾选要从服务器删除的文件；未勾选的会下载到本库：',
+		remoteTitle: '确认删除远程文件',
+		remoteWarningNotice: '远程文件将被删除，请确认',
 	},
 	dirSelector: {
 		cancel: '取消',

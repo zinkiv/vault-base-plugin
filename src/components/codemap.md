@@ -17,6 +17,7 @@ It owns user interaction state, but not sync logic, storage, or WebDAV transport
 
 - `SelectRemoteBaseDirModal` mounts the explorer with a WebDAV adapter, normalizes the confirmed remote path, and returns it to the caller.
 - `DeleteConfirmModal` mounts the file tree so users can choose which local files to delete or re-upload during auto-sync.
+- `RemoteDeleteConfirmModal` asks before any remote delete; keeping remote files downloads them instead of wiping NAS.
 - `FilterEditorModal` and `EncryptionReminderModal` are simple settings dialogs that edit in-memory state and commit on save/acknowledge.
 
 ## Integration

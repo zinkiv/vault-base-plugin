@@ -14,10 +14,15 @@ export type SyncRunStage =
 	| 'cancelled'
 	| 'failed';
 
-export type SyncRunWarning = {
-	code: 'delete_confirmation';
-	messageKey: 'deleteConfirm.warningNotice';
-};
+export type SyncRunWarning =
+	| {
+			code: 'delete_confirmation';
+			messageKey: 'deleteConfirm.warningNotice';
+	  }
+	| {
+			code: 'remote_delete_confirmation';
+			messageKey: 'deleteConfirm.remoteWarningNotice';
+	  };
 
 export type SyncPlanSummary = {
 	totalTasks: number;
