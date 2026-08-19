@@ -10,7 +10,7 @@ Shared reactive state for sync lifecycle and cancellation. This folder defines t
 - `hook<Args>()` is a fire-and-forget event channel with no payload storage.
 - `syncRun` is the central `Ref<SyncRunSnapshot | undefined>`; consumers read current state via `syncRun()` and subscribe for updates.
 - `sync-terminate.ts` is the terminal transition helper: it normalizes error info, stamps end time/duration, writes the final snapshot back through `syncRun`, and logs the outcome.
-- The sync snapshot is stage-based (`queued` → planning/confirmation/executing → terminal), and terminal stages are handled consistently by services and UI.
+- The sync snapshot is stage-based (`queued` → planning/confirmation/executing → terminal), and terminal stages are handled consistently by services and UI. Manual and startup sync enter `awaiting_confirmation` with a `plan_confirmation` warning while the task-review modal is open.
 
 ## Flow
 

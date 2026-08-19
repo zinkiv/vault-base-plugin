@@ -190,6 +190,17 @@ const translation: typeof en = {
 			sync: '同步',
 			upload: '上传',
 		},
+		planConfirm: {
+			cancel: '取消',
+			confirm: '确认',
+			mergeInstruction:
+				'本库和远程目录都有文件。请核对合并、下载和上传任务。勾选的任务会执行。',
+			mixedInstruction: '请核对下面的同步任务。勾选的会执行，未勾选的会跳过。',
+			pullInstruction: '本库为空，远程目录有文件。勾选的文件将下载到本库。',
+			pushInstruction: '远程目录为空，本库有文件。勾选的文件将上传到远程。',
+			title: '确认同步',
+			warningNotice: '请先核对同步任务再执行',
+		},
 		preConnecting: '☎️ 检查连接',
 		progress: '⌛️ 同步进度: {{percent}}%',
 		remoteDirectoryEmpty: '远程目录为空。如果笔记在其他文件夹，请在设置中选择正确的远程目录。',

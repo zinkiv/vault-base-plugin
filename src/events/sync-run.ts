@@ -16,6 +16,10 @@ export type SyncRunStage =
 
 export type SyncRunWarning =
 	| {
+			code: 'plan_confirmation';
+			messageKey: 'sync.planConfirm.warningNotice';
+	  }
+	| {
 			code: 'delete_confirmation';
 			messageKey: 'deleteConfirm.warningNotice';
 	  }

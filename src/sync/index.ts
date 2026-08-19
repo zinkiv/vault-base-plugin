@@ -10,6 +10,7 @@ import type {
 import type { SyncExecutionRequest } from '~/services/sync-executor.service';
 import DeleteConfirmModal from '~/components/DeleteConfirmModal';
 import RemoteDeleteConfirmModal from '~/components/RemoteDeleteConfirmModal';
+import SyncPlanConfirmModal from '~/components/SyncPlanConfirmModal';
 import { syncRun, syncCancel, updateSyncRunSnapshot } from '~/events';
 import finalizeSyncRun from '~/events/sync-terminate';
 import { statItem } from '~/fs/vault';
@@ -40,6 +41,7 @@ import PushTask from './tasks/push.task';
 import RemoveLocalTask from './tasks/remove-local.task';
 import RemoveRemoteTask from './tasks/remove-remote.task';
 import { TaskError } from './tasks/task.interface';
+import { shouldConfirmSyncPlan } from './utils/classify-sync-plan';
 import shouldKeepRemoteOnAutoSync from './utils/keep-remote-on-auto';
 import optimizeTasks from './utils/optimize-tasks';
 
@@ -137,7 +139,7 @@ export default class SyncEngine {
 					const downloadTasks = this.convertRemoteDeleteToDownload(removeRemoteTasks),
 						otherTasks = tasks.filter((task) => !(task instanceof RemoveRemoteTask));
 					tasks = [...downloadTasks, ...otherTasks];
-				} else {
+				} else if (!shouldConfirmSyncPlan(request.trigger)) {
 					currentRun = updateSyncRunSnapshot(currentRun, {
 						planSummary: {
 							...this.summarizePlan(tasks),
@@ -170,8 +172,45 @@ export default class SyncEngine {
 				return currentRun;
 			}
 
+			const displayableTasks = tasks.filter((task) => this.isDisplayableTask(task));
+			if (shouldConfirmSyncPlan(request.trigger) && displayableTasks.length > 0) {
+				currentRun = updateSyncRunSnapshot(currentRun, {
+					planSummary: {
+						...this.summarizePlan(tasks),
+						requiresConfirmation: true,
+						warnings: [
+							{
+								code: 'plan_confirmation',
+								messageKey: 'sync.planConfirm.warningNotice',
+							},
+						],
+					},
+					stage: 'awaiting_confirmation',
+					timestamps: {
+						confirmationStartedAt:
+							currentRun.timestamps.confirmationStartedAt ?? Date.now(),
+					},
+				});
+				syncRun(currentRun);
+				const { confirmed, selectedTasks } = await new SyncPlanConfirmModal(
+					this.app,
+					displayableTasks,
+				).openAndWait();
+				if (!confirmed || selectedTasks.length === 0) {
+					currentRun = finalizeSyncRun(currentRun, { stage: 'cancelled' });
+					return currentRun;
+				}
+				const hiddenTasks = tasks.filter((task) => !this.isDisplayableTask(task));
+				tasks = [...selectedTasks, ...hiddenTasks];
+			}
+
+			if (this.isCancelled) {
+				currentRun = finalizeSyncRun(currentRun, { stage: 'cancelled' });
+				return currentRun;
+			}
+
 			// Check for RemoveLocalTask during auto-sync and ask for confirmation
-			if (request.trigger !== 'manual' && settings.confirmBeforeDeleteInAutoSync) {
+			if (!shouldConfirmSyncPlan(request.trigger) && settings.confirmBeforeDeleteInAutoSync) {
 				const removeLocalTasks = tasks.filter((task) => task instanceof RemoveLocalTask),
 					otherTasks = tasks.filter((task) => !(task instanceof RemoveLocalTask));
 				if (removeLocalTasks.length > 0) {

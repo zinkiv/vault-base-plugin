@@ -130,6 +130,15 @@
 	background: var(--background-secondary);
 }
 
+.vault-base-sync-plan-modal {
+	width: min(720px, 92vw);
+}
+
+.vault-base-sync-plan-summary {
+	color: var(--text-muted);
+	margin-top: 0;
+}
+
 @container (max-width: 340px) {
 	.numeric-toggle {
 		flex-direction: column;

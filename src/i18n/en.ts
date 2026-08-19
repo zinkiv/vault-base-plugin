@@ -190,6 +190,20 @@ const en = {
 			sync: 'Sync',
 			upload: 'Upload',
 		},
+		planConfirm: {
+			cancel: 'Cancel',
+			confirm: 'Confirm',
+			mergeInstruction:
+				'This vault and the remote folder both have files. Review merge, download, and upload tasks. Checked tasks will run.',
+			mixedInstruction:
+				'Review the sync tasks below. Checked tasks will run; unchecked tasks will be skipped.',
+			pullInstruction:
+				'This vault is empty and the remote folder has files. Checked files will be downloaded.',
+			pushInstruction:
+				'The remote folder is empty and this vault has files. Checked files will be uploaded.',
+			title: 'Confirm sync',
+			warningNotice: 'Review sync tasks before they run',
+		},
 		preConnecting: '☎️ Pre-connecting',
 		progress: '⌛️ Sync progress: {{percent}}%',
 		remoteDirectoryEmpty:

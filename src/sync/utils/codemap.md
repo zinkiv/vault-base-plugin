@@ -8,7 +8,7 @@ Utility layer for sync planning and execution. It contains small pure helpers, f
 
 - Most helpers are pure and side-effect free.
 - `array-utils.ts` provides tiny array primitives (`getLast`, `getAndDeleteAt`) used by batching code.
-- `is-same-time.ts`, `is-mergeable-path.ts`, `is-changed.ts`, and `keep-remote-on-auto.ts` encapsulate sync comparisons and auto-sync remote-delete safety.
+- `is-same-time.ts`, `is-mergeable-path.ts`, `is-changed.ts`, `keep-remote-on-auto.ts`, and `classify-sync-plan.ts` encapsulate sync comparisons, auto-sync remote-delete safety, and plan-review classification.
 - `merge.ts` resolves content conflicts by timestamp or diff3 merge.
 - `split-chunks.ts` builds ranged-download chunks while skipping cached ranges.
 - `merge-remove-tasks.ts`, `sort-mkdir-tasks.ts`, `limit-push-pull-tasks.ts`, and `optimize-tasks.ts` transform task lists into efficient execution groups.

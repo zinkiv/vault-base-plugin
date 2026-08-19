@@ -1,5 +1,10 @@
 # Changelog
 
+## Vault Base v0.2.7 - 2026-08-19
+
+- Show a sync plan modal before manual and startup sync. Check download, upload, merge, and delete tasks, then confirm to run them.
+- Empty vault + remote files downloads after confirm; local files + empty remote uploads after confirm; both empty skips the modal.
+
 ## Vault Base v0.2.6 - 2026-08-19
 
 - Startup sync waits until Obsidian has finished loading the vault.

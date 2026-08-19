@@ -191,6 +191,17 @@ const zhHant: typeof en = {
 			sync: '同步',
 			upload: '上傳',
 		},
+		planConfirm: {
+			cancel: '取消',
+			confirm: '確認',
+			mergeInstruction:
+				'本庫與遠端目錄都有檔案。請核對合併、下載與上傳任務。勾選的任務會執行。',
+			mixedInstruction: '請核對下面的同步任務。勾選的會執行，未勾選的會跳過。',
+			pullInstruction: '本庫為空，遠端目錄有檔案。勾選的檔案將下載到本庫。',
+			pushInstruction: '遠端目錄為空，本庫有檔案。勾選的檔案將上傳到遠端。',
+			title: '確認同步',
+			warningNotice: '請先核對同步任務再執行',
+		},
 		preConnecting: '☎️ 預先連線中',
 		progress: '⌛️ 同步進度：{{percent}}%',
 		remoteDirectoryEmpty: '遠端目錄為空。如果筆記在其他資料夾，請在設定中選擇正確的遠端目錄。',
